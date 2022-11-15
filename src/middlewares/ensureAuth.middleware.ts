@@ -26,9 +26,9 @@ const ensureAuth = async (
     if (!decoded) {
       throw new AppError(401, "Unauthorized");
     }
-    const { userId } = <any>decoded;
-
+    const { userId, accountId } = <any>decoded;
     request.userId = userId;
+    request.accountId = accountId;
   });
 
   const userExists = await prisma.users.findUnique({

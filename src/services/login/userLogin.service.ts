@@ -15,9 +15,13 @@ const userLoginService = async ({ username, password }: IUserLogin) => {
     throw new AppError(401, "Wrong email/password");
   }
 
-  const token = signJWT({ userId: user.id }, String(process.env.SECRET_KEY), {
-    expiresIn: "1d",
-  });
+  const token = signJWT(
+    { userId: user.id, accountId: user.accounId },
+    String(process.env.SECRET_KEY),
+    {
+      expiresIn: "1d",
+    }
+  );
 
   return token;
 };
