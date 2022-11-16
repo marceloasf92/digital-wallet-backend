@@ -7,31 +7,42 @@ const userTransactionService = async ({
   cashOut,
   userId,
 }: ITransaction) => {
-  const userExist = await prisma.users.findUnique({
+  const userCashIn = await prisma.users.findUnique({
     where: {
       username: username,
     },
   });
 
-  const mineAccount = await prisma.users.findUnique({
+  if (!userCashIn) {
+    throw new AppError(401, "Username doesn't exist.");
+  }
+
+  if (userCashIn.id === userId) {
+    throw new AppError(405, "You are not allowed to transfer to yourself.");
+  }
+
+  const userCashOut = await prisma.users.findUnique({
     where: {
       id: userId,
     },
   });
 
-  const mineAccountId = <number>mineAccount?.accounId;
-
-  if (!userExist) {
-    throw new AppError(401, "Username doesn't exist.");
-  }
+  const userCashOutId = <number>userCashOut?.accounId;
 
   const userBalance = await prisma.accounts.findUnique({
     where: {
-      id: userExist.accounId,
+      id: userCashIn?.accounId,
     },
   });
 
-  const positiveBalance = Number(userBalance?.balance) - cashOut;
+  const userCashOutBalance = await prisma.accounts.findUnique({
+    where: {
+      id: userCashOut?.accounId,
+    },
+  });
+
+  const positiveBalance = Number(userCashOutBalance?.balance) - cashOut;
+  const cashInBalance = Number(userBalance?.balance) + cashOut;
 
   if (positiveBalance < 0) {
     throw new AppError(401, "Negative balance.");
@@ -39,7 +50,16 @@ const userTransactionService = async ({
 
   await prisma.accounts.update({
     where: {
-      id: userExist.accounId,
+      id: userCashIn.accounId,
+    },
+    data: {
+      balance: cashInBalance,
+    },
+  });
+
+  await prisma.accounts.update({
+    where: {
+      id: userCashOutId,
     },
     data: {
       balance: positiveBalance,
@@ -48,12 +68,11 @@ const userTransactionService = async ({
 
   const newTransaction = await prisma.transactions.create({
     data: {
-      debitedAccountId: userExist.accounId,
-      creditedAccountId: mineAccountId,
-      value: positiveBalance,
+      debitedAccountId: userCashIn.accounId,
+      creditedAccountId: userCashOutId,
+      value: cashOut,
     },
   });
-  console.log(newTransaction);
 
   return newTransaction;
 };
