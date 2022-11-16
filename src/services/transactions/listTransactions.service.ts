@@ -1,4 +1,3 @@
-import AppError from "../../errors/appError";
 import { prisma } from "../../prisma/client";
 
 const listTransactionsService = async (userId: number) => {

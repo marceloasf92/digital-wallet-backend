@@ -3,7 +3,7 @@ CREATE TABLE "users" (
     "id" SERIAL NOT NULL,
     "username" TEXT NOT NULL,
     "password" TEXT NOT NULL,
-    "accounId" INTEGER NOT NULL,
+    "accountId" INTEGER NOT NULL,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -31,10 +31,10 @@ CREATE TABLE "accounts" (
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_accounId_key" ON "users"("accounId");
+CREATE UNIQUE INDEX "users_accountId_key" ON "users"("accountId");
 
 -- AddForeignKey
-ALTER TABLE "users" ADD CONSTRAINT "users_accounId_fkey" FOREIGN KEY ("accounId") REFERENCES "accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "users" ADD CONSTRAINT "users_accountId_fkey" FOREIGN KEY ("accountId") REFERENCES "accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "transactions" ADD CONSTRAINT "transactions_debitedAccountId_fkey" FOREIGN KEY ("debitedAccountId") REFERENCES "accounts"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

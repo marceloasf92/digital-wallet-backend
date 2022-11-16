@@ -27,17 +27,17 @@ const userTransactionService = async ({
     },
   });
 
-  const userCashOutId = <number>userCashOut?.accounId;
+  const userCashOutId = <number>userCashOut?.accountId;
 
   const userBalance = await prisma.accounts.findUnique({
     where: {
-      id: userCashIn?.accounId,
+      id: userCashIn?.accountId,
     },
   });
 
   const userCashOutBalance = await prisma.accounts.findUnique({
     where: {
-      id: userCashOut?.accounId,
+      id: userCashOut?.accountId,
     },
   });
 
@@ -50,7 +50,7 @@ const userTransactionService = async ({
 
   await prisma.accounts.update({
     where: {
-      id: userCashIn.accounId,
+      id: userCashIn.accountId,
     },
     data: {
       balance: cashInBalance,
@@ -68,7 +68,7 @@ const userTransactionService = async ({
 
   const newTransaction = await prisma.transactions.create({
     data: {
-      debitedAccountId: userCashIn.accounId,
+      debitedAccountId: userCashIn.accountId,
       creditedAccountId: userCashOutId,
       value: cashOut,
     },

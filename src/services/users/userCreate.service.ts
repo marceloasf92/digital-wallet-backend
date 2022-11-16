@@ -5,7 +5,7 @@ import { prisma } from "../../prisma/client";
 const userCreateService = async ({
   username,
   password,
-  accounId,
+  accountId,
 }: IUserCreate) => {
   const hashPassword = await hash(password, 10);
 
@@ -13,11 +13,19 @@ const userCreateService = async ({
     data: {
       username,
       password: hashPassword,
-      accounId,
+      accountId,
     },
   });
 
-  return newUser;
+  interface IPrivateInformationUser {
+    username: string;
+    password?: string;
+  }
+
+  const privateInformationUser: IPrivateInformationUser = { ...newUser };
+  delete privateInformationUser.password;
+
+  return privateInformationUser;
 };
 
 export default userCreateService;

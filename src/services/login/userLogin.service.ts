@@ -16,7 +16,7 @@ const userLoginService = async ({ username, password }: IUserLogin) => {
   }
 
   const token = signJWT(
-    { userId: user.id, accountId: user.accounId },
+    { userId: user.id, accountId: user.accountId },
     String(process.env.SECRET_KEY),
     {
       expiresIn: "1d",
