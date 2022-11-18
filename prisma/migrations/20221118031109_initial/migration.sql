@@ -22,7 +22,7 @@ CREATE TABLE "transactions" (
 -- CreateTable
 CREATE TABLE "accounts" (
     "id" SERIAL NOT NULL,
-    "balance" DECIMAL(9,2) NOT NULL,
+    "balance" DECIMAL(9,2) NOT NULL DEFAULT 100,
 
     CONSTRAINT "accounts_pkey" PRIMARY KEY ("id")
 );

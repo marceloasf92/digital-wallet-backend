@@ -2,7 +2,8 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions"]
 }
 
 datasource db {
@@ -34,7 +35,7 @@ model Transactions {
 
 model Accounts {
   id           Int            @id @default(autoincrement())
-  balance      Decimal        @db.Decimal(9, 2)
+  balance      Decimal        @default(100) @db.Decimal(9, 2)
   user         Users?
   transaction1 Transactions[] @relation("debitedAccount")
   transaction2 Transactions[] @relation("creditedAccount")

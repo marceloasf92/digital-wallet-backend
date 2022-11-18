@@ -1,31 +1,37 @@
-import { IUserCreate } from "../../interfaces/users";
+import { Users } from "@prisma/client";
 import { hash } from "bcryptjs";
+import { IUserCreate } from "../../interfaces/users";
 import { prisma } from "../../prisma/client";
 
 const userCreateService = async ({
   username,
   password,
-  accountId,
-}: IUserCreate) => {
+}: IUserCreate): Promise<Omit<Users, "password">> => {
+  function exclude<User, Key extends keyof User>(
+    user: User,
+    keys: Key[]
+  ): Omit<User, Key> {
+    for (let key of keys) {
+      delete user[key];
+    }
+    return user;
+  }
+
   const hashPassword = await hash(password, 10);
 
   const newUser = await prisma.users.create({
     data: {
       username,
       password: hashPassword,
-      accountId,
+      account: {
+        create: {},
+      },
     },
   });
 
-  interface IPrivateInformationUser {
-    username: string;
-    password?: string;
-  }
+  const userWithoutPassword = exclude(newUser, ["password"]);
 
-  const privateInformationUser: IPrivateInformationUser = { ...newUser };
-  delete privateInformationUser.password;
-
-  return privateInformationUser;
+  return userWithoutPassword;
 };
 
 export default userCreateService;

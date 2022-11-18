@@ -14,7 +14,7 @@ const userTransactionService = async ({
   });
 
   if (!userCashIn) {
-    throw new AppError(401, "Username doesn't exist.");
+    throw new AppError(404, "Username doesn't exist.");
   }
 
   if (userCashIn.id === userId) {

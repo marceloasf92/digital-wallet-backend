@@ -19,6 +19,12 @@ const verifyDuplicatedEmail = async (
     throw new AppError(409, "Username already exists!");
   }
 
+  const characterCounterUsername = username.split("");
+
+  if (characterCounterUsername.length < 3) {
+    throw new AppError(401, "Username must have at least 3 characteres");
+  }
+
   next();
 };
 
