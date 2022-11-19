@@ -4,7 +4,7 @@ RUN apk update
 
 WORKDIR /app
 
-COPY package.json yarn.lock /app/
+COPY package.json /app/
 
 RUN yarn
 
