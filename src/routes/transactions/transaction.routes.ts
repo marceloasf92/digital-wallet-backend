@@ -1,11 +1,24 @@
 import { Router } from "express";
-import listTransactionsController from "../../controllers/transactions/listTransactions.controller";
-import userTransactionController from "../../controllers/transactions/userTransaction.controller";
+import listAllTransactions from "../../controllers/transactions/listAllTransactions.controller";
+import usersTransaction from "../../controllers/transactions/usersTransaction.controller";
 import ensureAuth from "../../middlewares/ensureAuth.middleware";
+import userAllowedToTransfer from "../../middlewares/userAllowedToTransfer.middleware";
+import usersBalance from "../../middlewares/usersBalance.middleware";
+import verifyIfUserExist from "../../middlewares/verifyIfUserExist.middleware";
+import { expressYupMiddleware } from "express-yup-middleware";
+import userTransactionsSchema from "../../validations/transactions/usersTransaction.validation";
 
 const transactionsRoutes = Router();
 
-transactionsRoutes.post("/new", ensureAuth, userTransactionController);
-transactionsRoutes.get("/list", ensureAuth, listTransactionsController);
+transactionsRoutes.post(
+  "/new",
+  expressYupMiddleware({ schemaValidator: userTransactionsSchema }),
+  ensureAuth,
+  verifyIfUserExist,
+  userAllowedToTransfer,
+  usersBalance,
+  usersTransaction
+);
+transactionsRoutes.get("/list", ensureAuth, listAllTransactions);
 
 export default transactionsRoutes;

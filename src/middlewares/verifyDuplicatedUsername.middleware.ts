@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import AppError from "../errors/appError";
 import { prisma } from "../prisma/client";
 
-const verifyDuplicatedEmail = async (
+const verifyDuplicatedUsername = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -28,4 +28,4 @@ const verifyDuplicatedEmail = async (
   next();
 };
 
-export default verifyDuplicatedEmail;
+export default verifyDuplicatedUsername;

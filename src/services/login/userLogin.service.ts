@@ -4,7 +4,10 @@ import { sign as signJWT } from "jsonwebtoken";
 import AppError from "../../errors/appError";
 import { prisma } from "../../prisma/client";
 
-const userLoginService = async ({ username, password }: IUserLogin) => {
+const userLoginService = async ({
+  username,
+  password,
+}: IUserLogin): Promise<string> => {
   const user = await prisma.users.findUnique({ where: { username } });
 
   if (!user) {

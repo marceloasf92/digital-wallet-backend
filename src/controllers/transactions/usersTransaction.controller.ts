@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import userTransactionService from "../../services/transactions/userTransaction.service";
+import userTransactionService from "../../services/transactions/usersTransaction.service";
 
 const userTransactionController = async (
   request: Request,
