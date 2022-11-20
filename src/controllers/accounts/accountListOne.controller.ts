@@ -6,9 +6,9 @@ const accountListOneController = async (
   response: Response
 ) => {
   const { accountId } = request;
-  const account = await accountListOneService(accountId);
+  const balance = await accountListOneService(accountId);
 
-  return response.status(200).json({ account });
+  return response.status(200).json({ balance });
 };
 
 export default accountListOneController;

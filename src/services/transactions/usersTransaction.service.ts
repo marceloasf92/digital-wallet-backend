@@ -34,8 +34,8 @@ const userTransactionService = async ({
     },
   });
 
-  const cashOutBalance = Number(userCashOut?.account.balance) - cashOut;
-  const cashInBalance = Number(userCashIn?.account.balance) + cashOut;
+  const cashOutBalance = Number(userCashOut?.account.balance) - Number(cashOut);
+  const cashInBalance = Number(userCashIn?.account.balance) + Number(cashOut);
 
   await prisma.accounts.update({
     where: {

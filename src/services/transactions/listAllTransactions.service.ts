@@ -1,15 +1,12 @@
-import { Transactions } from "@prisma/client";
 import { prisma } from "../../prisma/client";
 
-const listTransactionsService = async (
-  userId: number
-): Promise<{
-  creditedTransaction: Transactions[];
-  debitedTransaction: Transactions[];
-}> => {
+const listTransactionsService = async (userId: number) => {
   const creditedTransaction = await prisma.transactions.findMany({
     where: {
       creditedAccountId: userId,
+    },
+    include: {
+      debitedAccount: { include: { user: { select: { username: true } } } },
     },
   });
 
@@ -17,11 +14,14 @@ const listTransactionsService = async (
     where: {
       debitedAccountId: userId,
     },
+    include: {
+      creditedAccount: { include: { user: { select: { username: true } } } },
+    },
   });
 
   return {
-    creditedTransaction: creditedTransaction,
-    debitedTransaction: debitedTransaction,
+    sentTransaction: creditedTransaction,
+    receivedTransaction: debitedTransaction,
   };
 };
 

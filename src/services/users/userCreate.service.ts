@@ -1,5 +1,6 @@
 import { Users } from "@prisma/client";
 import { hash } from "bcryptjs";
+import AppError from "../../errors/appError";
 import { IUserCreate } from "../../interfaces/users";
 import { prisma } from "../../prisma/client";
 
@@ -15,6 +16,17 @@ const userCreateService = async ({
       delete user[key];
     }
     return user;
+  }
+
+  const regex = /^(?=.*\d)(?=.*[A-Z])[0-9a-zA-Z$*&@#]{8,}$/;
+
+  const testPassword = regex.test(password);
+
+  if (!testPassword) {
+    throw new AppError(
+      401,
+      "The password does not match what is expected from the pattern."
+    );
   }
 
   const hashPassword = await hash(password, 10);
