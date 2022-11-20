@@ -6,7 +6,7 @@
   "scripts": {
     "generate": "yarn prisma generate",
     "deploy": "yarn prisma migrate deploy",
-    "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/server.ts",
+    "dev": "yarn generate && ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/server.ts",
     "build": "tsc",
     "postbuild": "prisma migrate deploy",
     "start": "node ./dist/app.js"
