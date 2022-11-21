@@ -7,9 +7,10 @@
     "generate": "yarn prisma generate",
     "deploy": "yarn prisma migrate deploy",
     "dev": "ts-node-dev --exit-child --transpile-only --ignore-watch node_modules src/server.ts",
-    "build": "build",
+    "build": "tsc",
     "postbuild": "prisma migrate deploy",
-    "vercel-build": "prisma generate && prisma migrate deploy && build",
+    "vercel-build": "prisma generate && yarn migrate:deploy && yarn build",
+    "migrate:deploy": "DATABASE_URL=\"$MIGRATE_DATABASE_URL\" prisma migrate deploy",
     "start": "node ./dist/app.js"
   },
   "prisma": {
