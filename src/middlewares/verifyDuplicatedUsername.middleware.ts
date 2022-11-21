@@ -22,7 +22,7 @@ const verifyDuplicatedUsername = async (
   const characterCounterUsername = username.split("");
 
   if (characterCounterUsername.length < 3) {
-    throw new AppError(401, "Username must have at least 3 characteres");
+    throw new AppError(409, "Username must have at least 3 characteres.");
   }
 
   next();

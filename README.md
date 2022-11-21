@@ -6,7 +6,6 @@
 - [Guia prático de conteúdos:](#guia-prático-de-conteúdos)
   - [1. Visao geral do projeto](#1-visao-geral-do-projeto)
     - [Linguagem utilizada no projeto:](#linguagem-utilizada-no-projeto)
-    - [URL da API:](#url-da-api)
   - [2. Diagrama de entidades relacionais](#2-diagrama-de-entidades-relacionais)
   - [3.1 Instalando as dependencias:](#31-instalando-as-dependencias)
   - [3.2 Configurando as variaveis de ambiente](#32-configurando-as-variaveis-de-ambiente)
@@ -16,9 +15,36 @@
   - [4.1. Criação de Usuário](#41-criação-de-usuário)
     - [Exemplo de Request:](#exemplo-de-request)
     - [Corpo da Requisição:](#corpo-da-requisição)
-    - [Schema de Validação com Yup:](#schema-de-validação-com-yup)
     - [Exemplo de Response:](#exemplo-de-response)
     - [Possíveis Erros:](#possíveis-erros)
+  - [4.2. Login](#42-login)
+    - [Exemplo de Request:](#exemplo-de-request-1)
+    - [Corpo da Requisição:](#corpo-da-requisição-1)
+    - [Exemplo de Response:](#exemplo-de-response-1)
+    - [Possíveis Erros:](#possíveis-erros-1)
+  - [5. Account](#5-account)
+    - [Endpoints da rota users](#endpoints-da-rota-users-1)
+  - [5.1. Visualização da conta](#51-visualização-da-conta)
+    - [Exemplo de Request:](#exemplo-de-request-2)
+    - [Parâmetros da Requisição:](#parâmetros-da-requisição)
+    - [Corpo da Requisição:](#corpo-da-requisição-2)
+    - [Exemplo de Response:](#exemplo-de-response-2)
+    - [Possíveis Erros:](#possíveis-erros-2)
+  - [6. Transactions](#6-transactions)
+    - [Endpoints da rota users](#endpoints-da-rota-users-2)
+  - [6.1. Realização de uma nova transação.](#61-realização-de-uma-nova-transação)
+    - [Exemplo de Request:](#exemplo-de-request-3)
+    - [Parâmetros da Requisição:](#parâmetros-da-requisição-1)
+    - [Corpo da Requisição:](#corpo-da-requisição-3)
+    - [Schema de validacao com Yup:](#schema-de-validacao-com-yup)
+    - [Exemplo de Response:](#exemplo-de-response-3)
+    - [Possíveis Erros:](#possíveis-erros-3)
+  - [6.2. Listagem das transações.](#62-listagem-das-transações)
+    - [Exemplo de Request:](#exemplo-de-request-4)
+    - [Parâmetros da Requisição:](#parâmetros-da-requisição-2)
+    - [Corpo da Requisição:](#corpo-da-requisição-4)
+    - [Exemplo de Response:](#exemplo-de-response-4)
+    - [Possíveis Erros:](#possíveis-erros-4)
 
 ---
 
@@ -33,18 +59,14 @@ Dependencias utilizadas utilizadas.
 - [express-yup-middleware](https://www.npmjs.com/package/express-yup-middleware)
 - [jsonwebtoken](https://www.npmjs.com/package/jsonwebtoken)
 - [tsconfig-paths](https://www.npmjs.com/package/tsconfig-paths)
-- [uuid](https://www.npmjs.com/package/uuid)
 - [yup](https://www.npmjs.com/package/yup)
+- [cors](https://www.npmjs.com/package/cors)
 
 ### Linguagem utilizada no projeto:
 
 Todo o codigo da api foi feito a partir do typescript. Por isso, para instalar as dependencias sera necessario passar a tipagem e instalar as dev dependencies.
 
 **@types/biblioteca -D**
-
-### URL da API:
-
-https://capstone-m4.herokuapp.com/
 
 ## 2. Diagrama de entidades relacionais
 
@@ -93,27 +115,19 @@ yarn dev
 
 O objeto User é definido como:
 
-| Campo      | Tipo    | Descrição                         |
-| ---------- | ------- | --------------------------------- |
-| id         | string  | Identificador único do usuário    |
-| name       | string  | O nome do usuário.                |
-| email      | string  | O e-mail do usuário.              |
-| password   | string  | A senha de acesso do usuário      |
-| phone      | string  | O telefone do usuário             |
-| isSupplier | boolean | Informa se o usuário é fornecedor |
+| Campo     | Tipo   | Descrição                               |
+| --------- | ------ | --------------------------------------- |
+| id        | string | Identificador único do usuário          |
+| username  | string | O nome do usuário.                      |
+| password  | string | A senha de acesso do usuário            |
+| accountId | string | Identificador único da conta do usuário |
 
 ### Endpoints da rota users
 
-| Método | Rota            | Descrição                                                           |
-| ------ | --------------- | ------------------------------------------------------------------- |
-| POST   | /user/signup    | Criação de um usuário.                                              |
-| POST   | /user/signin    | Login do usuário.                                                   |
-| GET    | /user/me        | Lista um usuário usando seu token como parâmetro.                   |
-| GET    | /user/suppliers | Lista todos os fornecedores usando o token de login como parâmetro. |
-| PATCH  | /user/me        | Atualizar nome e email de um usuário.                               |
-| PATCH  | /user/password  | Atualizar senha de um usuário.                                      |
-| PATCH  | /user/role      | Atualizar função de um usuário.                                     |
-| DELETE | /user/me        | Deletar um usuário.                                                 |
+| Método | Rota         | Descrição             |
+| ------ | ------------ | --------------------- |
+| POST   | /user/signup | Criação de uma conta. |
+| POST   | /user/signin | Login de uma conta.   |
 
 ---
 
@@ -132,26 +146,193 @@ Content-type: application/json
 
 ```json
 {
-  "name": "Bico",
-  "email": "bico@mail.com",
-  "password": "1234",
-  "phone": "1234-5678"
+  "username": "teste",
+  "password": "1234567M"
 }
 ```
 
-### Schema de Validação com Yup:
+### Exemplo de Response:
+
+```
+201 Created
+```
+
+```json
+{
+  "id": 1,
+  "username": "teste",
+  "accountId": 1
+}
+```
+
+### Possíveis Erros:
+
+| Código do Erro | Descrição                                                      |
+| -------------- | -------------------------------------------------------------- |
+| 409 Conflict   | Username already exists!                                       |
+| 409 Conflict   | Username must have at least 3 characteres.                     |
+| 403 Forbidden  | The password does not match what is expected from the pattern. |
+
+---
+
+## 4.2. Login
+
+### Exemplo de Request:
+
+```
+POST /user/signin
+Host: http://localhost:3000
+Authorization: None
+Content-type: application/json
+```
+
+### Corpo da Requisição:
+
+```json
+{
+  "username": "teste",
+  "password": "1234567M"
+}
+```
+
+### Exemplo de Response:
+
+```
+200 OK
+```
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjEsImFjY291bnRJZCI6MSwiaWF0IjoxNjY5MDQyMzc2LCJleHAiOjE2NjkxMjg3NzZ9.HRzO-AXOh4K6X7KIq1lMqVkaFlBmFPV5ImO_vxQu4Vs"
+}
+```
+
+### Possíveis Erros:
+
+| Código do Erro | Descrição             |
+| -------------- | --------------------- |
+| 403 Forbidden  | Wrong email/password. |
+
+---
+
+## 5. Account
+
+O objeto User é definido como:
+
+| Campo   | Tipo   | Descrição                      |
+| ------- | ------ | ------------------------------ |
+| id      | string | Identificador único do usuário |
+| balance | number | O balance da conta do usuário. |
+
+### Endpoints da rota users
+
+| Método | Rota        | Descrição                        |
+| ------ | ----------- | -------------------------------- |
+| GET    | /account/me | Visualização da conta do usuário |
+
+---
+
+## 5.1. Visualização da conta
+
+### Exemplo de Request:
+
+```
+GET /account/me
+Host: http://localhost:3000
+Authorization: Bearer Token
+Content-type: application/json
+```
+
+### Parâmetros da Requisição:
+
+| Parâmetro    | Tipo   | Descrição                             |
+| ------------ | ------ | ------------------------------------- |
+| Bearer Token | string | Token de acesso temporário do usuário |
+
+### Corpo da Requisição:
+
+```json
+Vazio
+```
+
+### Exemplo de Response:
+
+```
+200 OK
+```
+
+```json
+{
+  "balance": "100"
+}
+```
+
+### Possíveis Erros:
+
+| Código do Erro   | Descrição                |
+| ---------------- | ------------------------ |
+| 401 Unauthorized | Unauthorized.            |
+| 404 Not Found    | Account does not exists! |
+
+---
+
+## 6. Transactions
+
+O objeto User é definido como:
+
+| Campo             | Tipo   | Descrição                               |
+| ----------------- | ------ | --------------------------------------- |
+| id                | number | Identificador único do usuário.         |
+| debitedAccountId  | number | Identificador único da conta debitada.  |
+| creditedAccountId | number | Identificador único da conta creditada. |
+| value             | number | Valor da transação realizada.           |
+| createdAt         | string | Data de realização da transação.        |
+
+### Endpoints da rota users
+
+| Método | Rota              | Descrição                                        |
+| ------ | ----------------- | ------------------------------------------------ |
+| POST   | /transaction/new  | Realização de uma nova transação.                |
+| GET    | /transaction/list | Listagem das transações realizadas pelo usuário. |
+
+---
+
+## 6.1. Realização de uma nova transação.
+
+### Exemplo de Request:
+
+```
+POST /transaction/new
+Host: http://localhost:3000
+Authorization: Bearer Token
+Content-type: application/json
+```
+
+### Parâmetros da Requisição:
+
+| Parâmetro    | Tipo   | Descrição                             |
+| ------------ | ------ | ------------------------------------- |
+| Bearer Token | string | Token de acesso temporário do usuário |
+
+### Corpo da Requisição:
+
+```json
+{
+  "username": "teste",
+  "cashOut": "44.5"
+}
+```
+
+### Schema de validacao com Yup:
 
 ```javascript
-schema: {
+  schema: {
     body: {
-      yupSchema: object()
+      yupSchema: yup
+        .object()
         .shape({
-          name: string().required("name is required"),
-          email: string()
-            .required("email is required")
-            .email("Invalid email format"),
-          password: string().required("password is required"),
-          phone: string().required("Phone is required"),
+          username: yup.string().required("username is required"),
+          cashOut: yup.number().positive().required("number is required"),
         })
         .noUnknown(true),
       validateOptions: {
@@ -165,24 +346,76 @@ schema: {
 ### Exemplo de Response:
 
 ```
-201 Created
+200 OK
 ```
 
 ```json
 {
-  "id": "abfe0aca-f0f4-43d6-be13-2419fa172f19",
-  "name": "Bico",
-  "email": "bico@email.com",
-  "phone": "1234-5678",
-  "isSupplier": false
+  "transation": {
+    "id": 2,
+    "debitedAccountId": 1,
+    "creditedAccountId": 2,
+    "value": "44.5",
+    "createdAt": "2022-11-20T19:45:56.477Z"
+  }
 }
 ```
 
 ### Possíveis Erros:
 
-| Código do Erro  | Descrição                 |
-| --------------- | ------------------------- |
-| 409 Conflict    | Email already registered. |
-| 400 Bad Request | Key is required.          |
+| Código do Erro         | Descrição                                         |
+| ---------------------- | ------------------------------------------------- |
+| 400 Bad Request        | Key is required.                                  |
+| 401 Unauthorized       | Unauthorized.                                     |
+| 404 Not Found          | Username doesn't exist.                           |
+| 405 Method Not Allowed | You are not allowed to transfer to yourself.      |
+| 405 Method Not Allowed | You are not allowed to transfer negative balance. |
+| 401 Unauthorized       | Negative balance.                                 |
+
+---
+
+## 6.2. Listagem das transações.
+
+### Exemplo de Request:
+
+```
+GET /transaction/list
+Host: http://localhost:3000
+Authorization: Bearer Token
+Content-type: application/json
+```
+
+### Parâmetros da Requisição:
+
+| Parâmetro    | Tipo   | Descrição                             |
+| ------------ | ------ | ------------------------------------- |
+| Bearer Token | string | Token de acesso temporário do usuário |
+
+### Corpo da Requisição:
+
+```json
+Vazio
+```
+
+### Exemplo de Response:
+
+```
+200 OK
+```
+
+```json
+{
+  "transactions": {
+    "sentTransaction": [],
+    "receivedTransaction": []
+  }
+}
+```
+
+### Possíveis Erros:
+
+| Código do Erro   | Descrição     |
+| ---------------- | ------------- |
+| 401 Unauthorized | Unauthorized. |
 
 ---

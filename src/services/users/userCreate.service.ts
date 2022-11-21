@@ -24,7 +24,7 @@ const userCreateService = async ({
 
   if (!testPassword) {
     throw new AppError(
-      401,
+      403,
       "The password does not match what is expected from the pattern."
     );
   }

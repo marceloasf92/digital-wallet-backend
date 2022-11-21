@@ -17,7 +17,8 @@ const usersBalance = async (
       account: {},
     },
   });
-  const positiveBalance = Number(userCashOut?.account.balance) - cashOut;
+  const positiveBalance =
+    Number(userCashOut?.account.balance) - Number(cashOut);
 
   if (positiveBalance < 0) {
     throw new AppError(401, "Negative balance.");
