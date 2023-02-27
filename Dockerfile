@@ -11,5 +11,5 @@ RUN yarn
 
 COPY . .
 
-CMD ["yarn", "pm2" ]
+CMD ["yarn", "start" ]
 
